@@ -5,10 +5,10 @@ metadata:
   namespace: libreddit
 spec:
   parentRefs:
-    - name: gateway-internal
+    - name: gateway-external
       namespace: gateway
       sectionName: http
-    - name: gateway-internal
+    - name: gateway-external
       namespace: gateway
       sectionName: https
   hostnames:

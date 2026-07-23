@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway-external
+  namespace: gateway
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: "*.192.168.1.18.traefik.me"
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.192.168.1.18.traefik.me"
+      tls:
+        certificateRefs:
+          - name: cert-gateway
+            kind: Secret
+            group: "" # required
+      allowedRoutes:
+        namespaces:
+          from: All

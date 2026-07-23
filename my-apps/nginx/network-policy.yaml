@@ -1,0 +1,20 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: nginx-isolation
+  namespace: nginx-example
+spec:
+  description: "Allow nginx traffic from cluster entities and DNS egress"
+  endpointSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - world

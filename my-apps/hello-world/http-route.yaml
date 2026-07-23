@@ -7,6 +7,9 @@ spec:
   parentRefs:
     - name: gateway-internal    # Must match your Gateway's metadata.name
       namespace: gateway
+      sectionName: http       # Must match your Gateway's listeners[].name
+    - name: gateway-internal    # Must match your Gateway's metadata.name
+      namespace: gateway
       sectionName: https       # Must match your Gateway's listeners[].name
   hostnames:
   - "hello-world.192.168.1.18.traefik.me"

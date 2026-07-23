@@ -11,6 +11,8 @@ spec:
   dnsNames:
     - "*.192.168.1.18.traefik.me"
     - 192.168.1.18.traefik.me
+    - "*.192.168.1.19.traefik.me"
+    - 192.168.1.19.traefik.me
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

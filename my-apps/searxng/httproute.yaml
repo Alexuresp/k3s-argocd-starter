@@ -5,9 +5,12 @@ metadata:
   namespace: searxng
 spec:
   parentRefs:
-    - name: gateway-external # Must match your Gateway's metadata.name
+    - name: gateway-external
       namespace: gateway
-      sectionName: https # Must match your Gateway's listeners[].name
+      sectionName: http
+    - name: gateway-external
+      namespace: gateway
+      sectionName: https
   hostnames:
     - "search.192.168.1.19.traefik.me"
   rules:

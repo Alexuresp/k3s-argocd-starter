@@ -7,6 +7,9 @@ spec:
   parentRefs:
     - name: gateway-external
       namespace: gateway
+      sectionName: http
+    - name: gateway-external
+      namespace: gateway
       sectionName: https
   hostnames:
     - "it-tools.192.168.1.19.traefik.me"

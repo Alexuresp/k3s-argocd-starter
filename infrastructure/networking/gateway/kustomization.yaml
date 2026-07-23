@@ -6,7 +6,6 @@ resources:
   # Gateway resources
   - gateway-class.yaml
   - ns.yaml
-  - gw-external.yaml
   - gw-internal.yaml
   - cert-gateway.yaml
 

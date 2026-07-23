@@ -22,7 +22,7 @@ spec:
       hostname: "*.192.168.1.18.traefik.me"
       tls:
         certificateRefs:
-           - name: cert-gateway
+          - name: cert-gateway
             kind: Secret
             group: "" # required
       allowedRoutes:

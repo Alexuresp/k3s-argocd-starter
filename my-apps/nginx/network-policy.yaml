@@ -6,7 +6,8 @@
 #
 # Key idea:
 # - ingress: allow only Cilium Gateway ingress entity on TCP/80
-# - egress: allow internet (world) + DNS (kube-dns in kube-system)
+# - egress: allow DNS only (kube-dns in kube-system)
+# - everything else is denied by default (no `world` egress)
 #
 # Why ingress entity:
 # - cilium-envoy pod runs in host-network / node-level mode
@@ -16,6 +17,8 @@
 #   opening the app to all cluster pods.
 #
 # Note:
+# - If you later need outbound internet access, add explicit
+#   `toEntities` or `toCIDR` rules instead of `world`.
 # - If you later add sidecar/envoy per-pod and want L7 rules,
 #   extend this policy with `toPorts.http` rules or an
 #   `CiliumEnvoyConfig` referencing this namespace.
@@ -40,9 +43,6 @@ spec:
             - port: "80"
               protocol: TCP
   egress:
-    # Allow outbound internet access (HTTP/HTTPS, apt, etc.)
-    - toEntities:
-        - world
     # Allow DNS resolution to kube-dns in kube-system.
     # Required for service discovery and external hostnames.
     - toEndpoints:

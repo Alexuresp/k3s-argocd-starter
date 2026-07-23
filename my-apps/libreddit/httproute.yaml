@@ -12,7 +12,7 @@ spec:
       namespace: gateway
       sectionName: https
   hostnames:
-    - "libreddit.192.168.1.18.traefik.me"
+    - "libreddit.192.168.1.19.traefik.me"
   rules:
     - matches:
         - path:

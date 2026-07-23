@@ -9,7 +9,7 @@ spec:
       namespace: gateway
       sectionName: https # Must match your Gateway's listeners[].name
   hostnames:
-    - "search.192.168.1.18.traefik.me"
+    - "search.192.168.1.19.traefik.me"
   rules:
     - matches:
         - path:

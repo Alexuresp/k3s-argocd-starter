@@ -26,11 +26,11 @@ ingress:
         - name: X-Forwarded-For
         - name: Accept-Language
         - name: User-Agent
-   - hostname: "*.192.168.1.18.traefik.me"
+   - hostname: "*.192.168.1.19.traefik.me"
     service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
     originRequest:
       noTLSVerify: true
-      originServerName: "*.192.168.1.18.traefik.me"
+      originServerName: "*.192.168.1.19.traefik.me"
       logHeaders: true
       headers:
         - name: CF-Connecting-IP
@@ -55,11 +55,11 @@ ingress:
         - name: CF-Bot-Score
         - name: CF-Challenge
         - name: CF-Bot-Management-Tag
-   - hostname: 192.168.1.18.traefik.me
+   - hostname: 192.168.1.19.traefik.me
     service: https://cilium-gateway-gateway-external.gateway.svc.cluster.local:443
     originRequest:
       noTLSVerify: true
-      originServerName: 192.168.1.18.traefik.me
+      originServerName: 192.168.1.19.traefik.me
       logHeaders: true
       headers:
         - name: CF-Connecting-IP

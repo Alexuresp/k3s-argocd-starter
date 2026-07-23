@@ -9,7 +9,7 @@ spec:
       namespace: gateway
       sectionName: https
   hostnames:
-    - "it-tools.192.168.1.18.traefik.me"
+    - "it-tools.192.168.1.19.traefik.me"
   rules:
     - matches:
         - path:

@@ -8,6 +8,10 @@ spec:
   parentRefs:
     - name: gateway-internal
       namespace: gateway
+      sectionName: http
+    - name: gateway-internal
+      namespace: gateway
+      sectionName: https
   hostnames:
     - "nginx.192.168.1.18.traefik.me"
   rules:

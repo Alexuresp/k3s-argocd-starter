@@ -9,6 +9,13 @@ spec:
     matchLabels:
       app: nginx
   ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
     - fromEntities:
         - world
       toPorts:

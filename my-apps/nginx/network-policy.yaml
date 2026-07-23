@@ -4,13 +4,13 @@ metadata:
   name: nginx-isolation
   namespace: nginx-example
 spec:
-  description: "Allow nginx traffic from cluster entities and DNS egress"
+  description: "Allow nginx traffic only from ingress entity and DNS egress"
   endpointSelector:
     matchLabels:
       app: nginx
   ingress:
     - fromEntities:
-        - cluster
+        - ingress
       toPorts:
         - ports:
             - port: "80"

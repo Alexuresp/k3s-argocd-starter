@@ -27,5 +27,5 @@ spec:
               protocol: TCP
             - port: "53"
               protocol: UDP
-    - toCIDRs:
+    - toCIDR:
         - "0.0.0.0/0"

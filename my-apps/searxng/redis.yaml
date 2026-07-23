@@ -20,7 +20,7 @@ spec:
       containers:
       - name: redis
         image: redis:7-alpine
-        command: [ "redis-server", "--save", "60", "1", "--loglevel", "warning" ]
+        command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
         ports:
         - containerPort: 6379
           name: redis
@@ -36,7 +36,7 @@ spec:
             memory: 128Mi
         securityContext:
           readOnlyRootFilesystem: true
-          runAsUser: 999 # redis user
+          runAsUser: 999
           allowPrivilegeEscalation: false
           capabilities:
             drop:

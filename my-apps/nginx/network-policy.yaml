@@ -4,7 +4,7 @@ metadata:
   name: nginx-isolation
   namespace: nginx-example
 spec:
-  description: "Isolate nginx namespace: deny cross-namespace traffic, allow only from gateway and DNS"
+  description: "Production isolation for nginx: deny all by default, allow only required traffic"
   endpointSelector:
     matchLabels:
       app: nginx
@@ -29,3 +29,9 @@ spec:
               protocol: UDP
     - toCIDR:
         - "0.0.0.0/0"
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP

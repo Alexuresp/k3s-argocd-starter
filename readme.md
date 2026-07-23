@@ -32,9 +32,8 @@ This starter kit provides a production-ready foundation for deploying applicatio
 
 - Kubernetes cluster (tested with K3s v1.35.1+k3s1)
 - Linux host (ARM or x86) with:
-  - Storage support (Longhorn - works with standard directories or dedicated disks)
+  - Storage support (local-path - works with standard directories)
   - NFS and CIFS support (optional)
-  - Open-iSCSI (required for Longhorn)
 - Cloudflare account (for DNS and Tunnel)
 - Local DNS setup (one of the following):
   - Local DNS server ([AdGuard Home setup guide](docs/adguard-home-setup.md))
@@ -60,7 +59,7 @@ graph TD
         N --> Cloudflared
         N --> Gateway
         
-        S --> Longhorn
+         S --> LocalPath
         
         C --> CertManager
     end
@@ -106,15 +105,6 @@ graph TD
 
 ### 1. System Setup
 ```bash
-# Essential packages for Longhorn storage
-sudo apt update && sudo apt install -y \
-  open-iscsi \
-  nfs-common \
-  cifs-utils  # Optional - only if using SMB/CIFS shares
-
-# Enable and start iSCSI (required for Longhorn)
-sudo systemctl enable --now iscsid
-
 # Critical kernel modules for Cilium
 sudo modprobe iptable_raw xt_socket
 echo -e "xt_socket\niptable_raw" | sudo tee /etc/modules-load.d/cilium.conf
@@ -123,7 +113,7 @@ echo -e "xt_socket\niptable_raw" | sudo tee /etc/modules-load.d/cilium.conf
 ### 2. K3s Installation
 ```bash
 # Customize these values!
-export SETUP_NODEIP=192.168.101.176  # Your node IP
+export SETUP_NODEIP=192.168.1.18  # Your node IP
 export SETUP_CLUSTERTOKEN=randomtokensecret12343  # Strong token
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.35.1+k3s1" \
@@ -147,8 +137,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config && chmod 600 $HOME/.kube/config
 sudo cat /var/lib/rancher/k3s/server/node-token
 
 # On each WORKER node:
-export MASTER_IP=192.168.101.202  # IP of your master node
-export NODE_IP=192.168.101.203    # IP of THIS worker node
+export MASTER_IP=192.168.1.18  # IP of your master node
+export NODE_IP=192.168.1.18    # IP of THIS worker node
 export K3S_TOKEN=your-node-token # From master's node-token file
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.35.1+k3s1" \
@@ -168,7 +158,7 @@ kubectl get nodes -o wide
    - Run: `kubectl config view --raw > kubeconfig.yaml`
 3. When adding to Lens:
    - Replace the server URL with your K3s node IP
-   - Example: `server: https://192.168.10.202:6443`
+    - Example: `server: https://192.168.1.18:6443`
 4. Save and connect
 
 ### 3. Networking Setup (Cilium)
@@ -267,7 +257,7 @@ The monitoring stack uses kube-prometheus-stack Helm chart deployed via Argo CD,
 - **Prometheus**: `https://prometheus.yourdomain.xyz`
 - **AlertManager**: `https://alertmanager.yourdomain.xyz`
 
-**Storage (with Longhorn):**
+**Storage (with local-path):**
 - **Prometheus**: `10Gi` with 7-day retention
 - **Grafana**: `1Gi` for dashboards and config
 - **AlertManager**: `512Mi` for alert state
@@ -414,12 +404,12 @@ cilium connectivity test --all-flows
 ```
 
 **Access Endpoints:**
-- Argo CD: `https://argocd.$DOMAIN`
-- Grafana: `https://grafana.$DOMAIN`
-- Prometheus: `https://prometheus.$DOMAIN`
-- AlertManager: `https://alertmanager.$DOMAIN`
-- SearXNG: `https://search.$DOMAIN`
-- LibReddit: `https://reddit.$DOMAIN`
+- Argo CD: `https://argocd.192.168.1.18.traefik.me`
+- Grafana: `https://grafana.192.168.1.18.traefik.me`
+- Prometheus: `https://prometheus.192.168.1.18.traefik.me`
+- AlertManager: `https://alertmanager.192.168.1.18.traefik.me`
+- SearXNG: `https://search.192.168.1.18.traefik.me`
+- LibReddit: `https://reddit.192.168.1.18.traefik.me`
 
 ## 📦 Included Applications
 
@@ -428,7 +418,7 @@ cilium connectivity test --all-flows
 | **Monitoring** | Prometheus, Grafana, Loki, Tempo    |
 | **Privacy**    | SearXNG, LibReddit                  |
 | **Infra**      | Cilium, Gateway API, Cloudflared    |
-| **Storage**    | Longhorn                            |
+| **Storage**    | local-path                           |
 | **Security**   | cert-manager, Argo CD Projects      |
 
 ## 🤝 Contributing
@@ -566,29 +556,3 @@ If LoadBalancer IPs aren't advertising properly:
 1. Verify physical interface name matches in CiliumL2AnnouncementPolicy
 2. Check interface exists on all nodes: `ip link show dev enp1s0`
 3. Ensure Cilium pods are running: `kubectl get pods -n kube-system -l k8s-app=cilium`
-
-**Longhorn Volume Mount Issues:**
-```bash
-# PROBLEM: Volumes fail to mount with "device busy" or multipath conflicts
-# COMMON CAUSE: Linux multipath daemon interfering with Longhorn device management
-
-# Check if multipathd is running (often enabled by default on Ubuntu/Debian)
-systemctl status multipathd
-
-# SOLUTION: Disable multipath daemon on all nodes
-sudo systemctl disable --now multipathd
-
-# Verify it's stopped
-systemctl is-active multipathd  # Should return "inactive"
-
-# After disabling multipathd, restart kubelet to clear any cached device state
-sudo systemctl restart k3s  # For K3s
-# OR
-sudo systemctl restart kubelet  # For standard Kubernetes
-
-# Check Longhorn volume status after restart
-kubectl get volumes -n longhorn-system
-kubectl get pods -n longhorn-system
-
-# Reference: https://longhorn.io/kb/troubleshooting-volume-with-multipath/
-```

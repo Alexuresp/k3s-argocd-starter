@@ -41,18 +41,18 @@ dns:
     - 0.0.0.0
   port: 53
   rewrites:
-    - domain: homepage.vanillax.xyz
-      answer: 192.168.10.21
-    - domain: argocd.vanillax.xyz
-      answer: 192.168.10.21
-    - domain: intgw.vanillax.xyz
-      answer: 192.168.10.21
-    - domain: nginx.vanillax.xyz
-      answer: 192.168.10.21
-    - domain: test.vanillax.xyz
-      answer: 192.168.10.21
-    - domain: extgw.vanillax.xyz
-      answer: 192.168.10.22
+    - domain: homepage.192.168.1.18.traefik.me
+      answer: 192.168.1.18
+    - domain: argocd.192.168.1.18.traefik.me
+      answer: 192.168.1.18
+    - domain: intgw.192.168.1.18.traefik.me
+      answer: 192.168.1.18
+    - domain: nginx.192.168.1.18.traefik.me
+      answer: 192.168.1.18
+    - domain: test.192.168.1.18.traefik.me
+      answer: 192.168.1.18
+    - domain: extgw.192.168.1.18.traefik.me
+      answer: 192.168.1.18
   upstream_dns:
     - https://1.1.1.1/dns-query
     - https://1.0.0.1/dns-query
@@ -97,9 +97,9 @@ To verify your setup is working:
 1. Open a terminal/command prompt
 2. Try pinging an internal domain:
 ```bash
-ping homepage.vanillax.xyz
+ping homepage.192.168.1.18.traefik.me
 ```
-It should resolve to 192.168.10.21
+It should resolve to 192.168.1.18
 
 ## Troubleshooting
 

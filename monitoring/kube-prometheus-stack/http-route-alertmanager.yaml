@@ -9,7 +9,7 @@ spec:
     namespace: gateway
     sectionName: https
   hostnames:
-  - "alertmanager.vanillax.xyz"
+   - "alertmanager.192.168.1.18.traefik.me"
   rules:
   - matches:
     - path:

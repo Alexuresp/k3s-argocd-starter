@@ -7,7 +7,7 @@ spec:
     - name: gateway-internal
       namespace: gateway
   hostnames:
-  - "homepage.vanillax.xyz"
+  - "homepage.192.168.1.18.traefik.me"
   rules:
   - matches:
     - path:
